@@ -1,0 +1,17 @@
+{
+  "name": "api",
+  "version": "0.0.0",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  },
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.3",
+    "@types/ws": "^8.5.10"
+  }
+}
