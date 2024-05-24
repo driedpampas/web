@@ -1,3 +1,4 @@
+import { ExecutionContext } from "@cloudflare/workers-types";
 import { Env } from ".";
 import { Pool/*, neonConfig*/ } from '@neondatabase/serverless';
 //import ws from 'ws';
@@ -77,7 +78,7 @@ export async function insertInto(request: Request, env: Env, ctx: any) {
 	}
 }
 
-export async function getUrl(request: Request, env: Env, ctx: any) {
+export async function getUrl(request: Request, env: Env, ctx: ExecutionContext) {
     if (request.method === 'POST') {
         const pool = new Pool({ connectionString: env.DATABASE_URL });
         pool.on('error', err => console.error(err));

@@ -2,22 +2,24 @@
 import { Client } from "@neondatabase/serverless";
 import renderHtml from "./renderHtml.ts";
 import { getUrl, insertInto } from "./interact.js";
+import { ExecutionContext } from "@cloudflare/workers-types";
 
 export interface Env {
     DATABASE_URL: string;
 }
 
 export default {
-	async fetch(request: Request, env: Env, ctx: any) {
-        function isInsert(request) {
+	async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+        function isInsert(request: Request) {
             return new URL(request.url).pathname === '/v1/add';
         }
 
-        function isStatus(request) {
-            return new URL(request.url).pathname === '/status';
+        function isStatus(request: Request) {
+            const pathnames = ['/status', '/dbstatus', '/'];
+            return pathnames.includes(new URL(request.url).pathname);
         }
 
-        function isGet(request) {
+        function isGet(request: Request) {
             return new URL(request.url).pathname === '/v1/get';
         }
 
