@@ -1,11 +1,32 @@
 import { Env } from ".";
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import ws from 'ws';
-
-neonConfig.webSocketConstructor = ws;
+import { Pool/*, neonConfig*/ } from '@neondatabase/serverless';
+//import ws from 'ws';
+const rateLimit = new Map();
+//neonConfig.webSocketConstructor = ws;
 
 export async function insertInto(request: Request, env: Env, ctx: any) {
 	if (request.method === 'POST') {
+		// ...
+		const clientIp = request.headers.get('CF-Connecting-IP');
+		const now = Date.now();
+
+		if (!rateLimit.has(clientIp)) {
+		  rateLimit.set(clientIp, { count: 1, lastRequest: now });
+		} else {
+		  const clientData = rateLimit.get(clientIp);
+		  if (now - clientData.lastRequest < 60000) { // 1 minute window
+			if (clientData.count >= 60) { // 60 requests per minute
+			  return new Response('Too Many Requests', { status: 500 });
+			}
+			clientData.count++;
+		  } else {
+			clientData.count = 1;
+			clientData.lastRequest = now;
+		  }
+		  rateLimit.set(clientIp, clientData);
+		}
+		// ...
+		// ...
 		const pool = new Pool({ connectionString: env.DATABASE_URL });
 		pool.on('error', err => console.error(err));
 		const client = await pool.connect();
@@ -25,7 +46,9 @@ export async function insertInto(request: Request, env: Env, ctx: any) {
 			if (rows.length > 0) {
 				return new Response(JSON.stringify({ link: rows[0].url }), {
 					status: 200,
-					headers: { 'Content-Type': 'application/json' }
+					headers: {
+						'Content-Type': 'application/json'
+					}
 				});
 			}
 
@@ -62,9 +85,11 @@ export async function getUrl(request: Request, env: Env, ctx: any) {
         try {
             const body = await request.json();
             const uid = body.id;
+			console.log(uid)
 
             const { rows } = await client.query('SELECT * FROM links WHERE id = $1', [uid]);
             if (rows.length > 0) {
+				console.log("yes")
 				return new Response(JSON.stringify({ ogurl: rows[0].ogurl }), {
 					status: 200,
 					headers: { 'Content-Type': 'application/json' }

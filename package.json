@@ -1,5 +1,5 @@
 {
-  "name": "api",
+  "name": "dbapi",
   "version": "0.0.0",
   "devDependencies": {
     "wrangler": "^3.0.0"
@@ -11,7 +11,6 @@
     "start": "wrangler dev"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.9.3",
-    "@types/ws": "^8.5.10"
+    "@neondatabase/serverless": "^0.9.3"
   }
 }

@@ -9,22 +9,36 @@ export interface Env {
 
 export default {
 	async fetch(request: Request, env: Env, ctx: any) {
-		if (function isStatus(request: Request): boolean {const pathnames = ['/dbstatus', '/status']; return pathnames.includes(new URL(request.url).pathname);})
-			{return status(request, env, ctx);
-		} else if (function isInsert(request: Request) {return new URL(request.url).pathname === '/v1/add'})
-			{return insertInto(request, env, ctx);
-		} else if (function isGet(request: Request) {return new URL(request.url).pathname === '/v1/get'})
-			{return getUrl(request, env, ctx);
-		} else return status(request, env, ctx); /* new Response("not here", {
-			status: 404,
-			headers: {
-				"Content-Type": "text/html"
-			}
-		});*/
+        function isInsert(request) {
+            return new URL(request.url).pathname === '/v1/add';
+        }
+
+        function isStatus(request) {
+            return new URL(request.url).pathname === '/status';
+        }
+
+        function isGet(request) {
+            return new URL(request.url).pathname === '/v1/get';
+        }
+
+        if (isStatus(request)) {
+            return status(request, env, ctx);
+        } else if (isInsert(request)) {
+            return insertInto(request, env, ctx);
+        } else if (isGet(request)) {
+            return getUrl(request, env, ctx);
+        } else {
+            return new Response("not here", {
+                status: 404,
+                headers: {
+                    "Content-Type": "text/html"
+                }
+            });
+        }
 	},
 };
 
-async function status(request: any, env: any, ctx) {
+async function status(request: Request, env: Env, ctx: { waitUntil: (arg0: Promise<void>) => void; }) {
 	const client = new Client(env.DATABASE_URL);
 	await client.connect();
 	const data = await client.query(`SELECT count(*) as num_tables FROM information_schema.tables WHERE table_schema='public'`);
@@ -37,3 +51,17 @@ async function status(request: any, env: any, ctx) {
 		}
 	});
 }
+
+/*const allowedOrigins = [];
+
+export function isAllowedOrigin(origin: string) {
+	return allowedOrigins.includes(origin);
+}
+
+export function setCorsHeaders(response: { headers: { set: (arg0: string, arg1: string) => void; }; }, origin: any) {
+	response.headers.set('Access-Control-Allow-Origin', origin);
+	response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+	response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+	return response;
+}
+*/

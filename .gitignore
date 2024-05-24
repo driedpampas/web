@@ -178,3 +178,4 @@ src/disabledFuncs.ts
 bun.lockb
 .prettierrc
 .editorconfig
+.vscode
