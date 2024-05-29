@@ -10,16 +10,16 @@ import addPage from './routes/page';
 import loginPage from './routes/login';
 
 type Bindings = {[key in keyof CloudflareBindings]: CloudflareBindings[key]}
-const app = new Hono<{ Bindings: Bindings }>({
+const app = new Hono<{ Bindings: Bindings }>/*({
     getPath: (req) => req.url.replace(/^https?:\/(.+?)$/, '$1'),
 });
 
 app.use(
     '*',
     csrf({
-        origin: (origin) => /http(s)?:\/\/(\w+\.)?dry\.nl\.eu\.org$/.test(origin),
+        origin: (origin) => /http(s)?:\/\/(\w+\.)?api\.dry\.nl\.eu\.org$/.test(origin),
     })
-)
+)*/
 // csrf breaks local developing completely
 
 app.get('/status', async (c) => {
