@@ -6,7 +6,10 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.9.3",
-    "hono": "^4.3.11"
+    "@unkey/api": "^0.20.6",
+    "express-rate-limit": "^7.2.0",
+    "hono": "^4.3.11",
+    "hono-rate-limiter": "^0.3.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240512.0",

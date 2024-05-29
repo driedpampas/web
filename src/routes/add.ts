@@ -1,7 +1,26 @@
+import { verifyKey } from '@unkey/api';
 
 export default function(app: { post: (arg0: string, arg1: (c: any) => Promise<Response>) => void; get: (arg0: string, arg1: (c: any) => Promise<Response>) => void; }) {
 // ...
-app.post('/v1/add', async (c) => {
+app.post('/v1/add',  async (c) => {
+    const authHeader = c.req.header('Authorization');
+    const key = authHeader?.replace('Bearer ', '');
+    if (!key) {
+      return c.text('Unauthorized', 401);
+    }
+  
+    const { result, error } = await verifyKey(key);
+    if (error) {
+      // This may happen on network errors
+      // We already retry the request 5 times, but if it still fails, we return an error
+      console.error(error);
+      return c.text('Internal Server Error', 500);
+    }
+  
+    if (!result.valid) {
+      return c.text('Unauthorized', 401);
+    }
+    
     const body: any = await c.req.json();
     const src = body.link;
     const urlPattern = /^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
