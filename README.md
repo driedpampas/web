@@ -1,11 +1,10 @@
-Started as the API/Backend is now becoming an entire website of sorts.
+Started as an API/Backend, is now becoming an entire website of sorts.
 
 Uses Cloudflare's `D1` serverless databases and `Workers`, and the `Hono` Framework.
 
 Notes:
 - `index.ts` is the... index file
-- `./routes` holds the logic for `/v1/add` and `/v1/get` routes and the code for the `add` subdomain page
-- `datastore.ts` is the Data Store for the rate limiting component (also uses `D1`)
+- `./routes` holds the code for all of the routes, which are consolidated into one function in `/routes/index.ts`
 
 To use this, a `wrangler.toml` file is needed. Here's an example:
 

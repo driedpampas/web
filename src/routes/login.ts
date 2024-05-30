@@ -1,4 +1,5 @@
 import { Unkey } from "@unkey/api";
+import { getCookie, getSignedCookie, setCookie, setSignedCookie, deleteCookie } from 'hono/cookie'
 
 export default function(app: { get: (arg0: string, arg1: (c: any) => any) => void; post: (arg0: string, arg1: (c: any) => Promise<any>) => void; }) {
 // ...
@@ -57,6 +58,30 @@ const accountCreationPage = `
       <button type="submit">Create Account</button>
     </form>
   </div>
+  <script>
+  document.querySelector('form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const username = event.target.elements.username.value;
+    const response = await fetch('/create-account', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert('Account created');
+      // Handle successful account creation here
+    } else {
+      alert('Error: ' + data.error);
+      // Handle errors here
+    }
+  });
+</script>
 </body>
 </html>
 `;
@@ -68,7 +93,7 @@ app.get('/login', (c) => {
 
 // Handle form submissions and generate API key
 app.post('/create-account', async (c) => {
-  const body = await c.req.parseBody();
+  const body = await c.req.json();
   const username = body.username;
 
   // Retrieve the Unkey API token and API ID from environment variables
@@ -87,8 +112,9 @@ app.post('/create-account', async (c) => {
     apiId,
   });
 
-  // Respond with the generated API key
-  return c.json({ message: 'Account created successfully', apiKey: key.result });
+  const keyID = key.result?.keyId
+  setSignedCookie(c, username, keyID?.toString() || '0', c.env.PASSWORD, { expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), sameSite: 'strict' });
+  return c.text('Account created', 200)
 });
 
 // ...

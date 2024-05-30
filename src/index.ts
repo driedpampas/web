@@ -1,53 +1,27 @@
 import { Hono } from 'hono';
-import { jwt } from 'hono/jwt'
-import { csrf } from 'hono/csrf'
-import RLStore from './datastore';
-import { rateLimiter } from "hono-rate-limiter";
+//import RLStore from './datastore';
+//import { rateLimiter } from "hono-rate-limiter";
 //...
-import GetRoute from './routes/get';
-import AddRoute from './routes/add';
-import addPage from './routes/page';
-import loginPage from './routes/login';
+import { initializeRoutes } from './routes';
+// ...
 
 type Bindings = {[key in keyof CloudflareBindings]: CloudflareBindings[key]}
-const app = new Hono<{ Bindings: Bindings }>/*({
-    getPath: (req) => req.url.replace(/^https?:\/(.+?)$/, '$1'),
-});
+const app = new Hono<{ Bindings: Bindings }>
 
-app.use(
-    '*',
-    csrf({
-        origin: (origin) => /http(s)?:\/\/(\w+\.)?api\.dry\.nl\.eu\.org$/.test(origin),
-    })
-)*/
-// csrf breaks local developing completely
+initializeRoutes(app);
 
-app.get('/status', async (c) => {
-    return c.text('online');
-})
-
-GetRoute(app);
-AddRoute(app);
-addPage(app);
-loginPage(app);
-
-app.use('/auth/*', (c, next) => {
-    const jwtMiddleware = jwt({
-        // @ts-ignore
-        secret: c.env.PASSWORD,
-    })
-    return jwtMiddleware(c, next)
-})
+app.get('/status', async (c) => {return c.text('online');})
 
 app.all('*', async (c) => {
-    return new Response("not here", {
+    return Response.redirect('/links');
+    /*return new Response("not here", {
         status: 404,
         headers: {"Content-Type": "text/html"}
-    });
+    });*/
 })
 
 // testing this, might be replaced
-app.use(async (c, next) => {
+/*app.use(async (c, next) => {
     const limiter = rateLimiter({
         windowMs: 15 * 60 * 1000, // 15 minutes
         limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
@@ -60,6 +34,6 @@ app.use(async (c, next) => {
 
     //@ts-ignore
     await limiter(c, next);
-});
+});*/
 
 export default app;
