@@ -10,16 +10,6 @@ const app = new Hono<{ Bindings: Bindings }>
 
 initializeRoutes(app);
 
-app.get('/status', async (c) => {return c.text('online');})
-
-app.all('*', async (c) => {
-    return Response.redirect('/links');
-    /*return new Response("not here", {
-        status: 404,
-        headers: {"Content-Type": "text/html"}
-    });*/
-})
-
 // testing this, might be replaced
 /*app.use(async (c, next) => {
     const limiter = rateLimiter({

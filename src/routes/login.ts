@@ -1,7 +1,7 @@
 import { Unkey } from "@unkey/api";
-import { getCookie, getSignedCookie, setCookie, setSignedCookie, deleteCookie } from 'hono/cookie'
+import { setSignedCookie } from 'hono/cookie'
 
-export default function(app: { get: (arg0: string, arg1: (c: any) => any) => void; post: (arg0: string, arg1: (c: any) => Promise<any>) => void; }) {
+export default function(app: { all: (arg0: string, arg1: (c: any) => Response) => void; get: (arg0: string, arg1: (c: any) => any) => void; post: (arg0: string, arg1: (c: any) => Promise<any>) => void; }) {
 // ...
 
 const accountCreationPage = `
@@ -12,9 +12,15 @@ const accountCreationPage = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Account Creation</title>
   <style>
+  :root {
+    --text: #fae0e5;
+    --background: #0e0205;
+    --primaryRT: #eb8098;
+    --secondaryRT: #712f3d;
+  }
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      background-color: var(--background);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -22,13 +28,14 @@ const accountCreationPage = `
       margin: 0;
     }
     .container {
-      background-color: white;
+      background-color: var(--secondaryRT);
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .container h1 {
       margin-top: 0;
+      color: var(--text)
     }
     .container form {
       display: flex;
@@ -39,10 +46,11 @@ const accountCreationPage = `
       padding: 8px;
       font-size: 16px;
       border-radius: 8px;
+      opacity: 40%
     }
     .container form button {
       padding: 10px;
-      background-color: #007BFF;
+      background-color: var(--primaryRT);
       color: white;
       border: none;
       border-radius: 8px;
@@ -53,17 +61,23 @@ const accountCreationPage = `
 <body>
   <div class="container">
     <h1>Create Account</h1>
-    <form action="/create-account" method="POST">
+    <form>
       <input type="text" name="username" placeholder="Enter your username" required>
       <button type="submit">Create Account</button>
     </form>
   </div>
-  <script>
+  <scriptsrc="https://dry.nl.eu.org/loginjs"></script>
+</body>
+</html>
+`;
+
+app.all('/loginjs', (c) => {
+	const jsCode = `
   document.querySelector('form').addEventListener('submit', async function(event) {
     event.preventDefault();
 
     const username = event.target.elements.username.value;
-    const response = await fetch('/create-account', {
+    const response = await fetch('https://dry.nl.eu.org/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -81,10 +95,14 @@ const accountCreationPage = `
       // Handle errors here
     }
   });
-</script>
-</body>
-</html>
-`;
+	`;
+  
+	return new Response(jsCode, {
+    status: 200,
+		headers: {"Content-Type": "application/javascript"}
+    });
+});
+
 
 // Serve the account creation page
 app.get('/login', (c) => {
@@ -92,7 +110,7 @@ app.get('/login', (c) => {
 });
 
 // Handle form submissions and generate API key
-app.post('/create-account', async (c) => {
+app.post('/login', async (c) => {
   const body = await c.req.json();
   const username = body.username;
 

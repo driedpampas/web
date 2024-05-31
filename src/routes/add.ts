@@ -1,28 +1,15 @@
 import { verifyKey } from '@unkey/api';
+import { getSignedCookie } from 'hono/cookie'
 
 export default function(app: { post: (arg0: string, arg1: (c: any) => Promise<Response>) => void; get: (arg0: string, arg1: (c: any) => Promise<Response>) => void; }) {
 // ...
 app.post('/v1/add',  async (c) => {
-    const authHeader = c.req.header('Authorization');
-    const key = authHeader?.replace('Bearer ', '');
-    if (!key) {
-      return c.text('Unauthorized', 401);
-    }
-  
-    const { result, error } = await verifyKey(key);
-    if (error) {
-      // This may happen on network errors
-      // We already retry the request 5 times, but if it still fails, we return an error
-      console.error(error);
-      return c.text('Internal Server Error', 500);
-    }
-  
-    if (!result.valid) {
-      return c.text('Unauthorized', 401);
-    }
-    
     const body: any = await c.req.json();
-    const src = body.link;
+    let src = body.link;
+    const httpPattern = /^http(s)?:\/\//;
+    if (!httpPattern.test(src)) {
+        src = 'https://' + src;
+    }
     const urlPattern = /^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
     const atSignPattern = /.*\.[^\/]*@[^\/]*$/;
     console.log(src)
@@ -40,6 +27,28 @@ app.post('/v1/add',  async (c) => {
             status: 200,
             headers: {'Content-Type': 'application/json'}
         });
+    } else try {
+
+    const apiKey = getSignedCookie(c, c.env.PASSWORD, 'keyID');
+
+    if (!apiKey) {
+        const authHeader = c.req.header('Authorization');
+        const key = authHeader?.replace('Bearer ', '');
+        if (!key) {
+        return c.text('Unauthorized', 401);
+        }
+    
+        const { result, error } = await verifyKey(key);
+        if (error) {
+        // This may happen on network errors
+        // We already retry the request 5 times, but if it still fails, we return an error
+        console.error(`Error in api: ${error}`);
+        return c.text('API - /v1/add - Internal Server Error', 500);
+        }
+    
+        if (!result.valid) {
+        return c.text('Unauthorized', 401);
+        }
     }
 
     const id = Math.random().toString(36).substring(2, 10);
@@ -51,6 +60,7 @@ app.post('/v1/add',  async (c) => {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
     });
+    } catch (e) {console.error(e);}
 })
 
 app.get('/v1/add', async (c: any) => {
