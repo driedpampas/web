@@ -12,3 +12,6 @@ bun.lockb
 .dev.vars
 wrangler.toml
 page.html
+.vscode/settings.json
+*.code-workspace
+users-dev.sql

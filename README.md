@@ -1,6 +1,9 @@
 Started as an API/Backend, is now becoming an entire website of sorts.
 
-Uses Cloudflare's `D1` serverless databases and `Workers`, and the `Hono` Framework.
+Uses:
+- Cloudflare's `D1` serverless databases and `Workers`
+- the `Hono` Framework
+- `htmx` to submit the form data
 
 Notes:
 - `index.ts` is the... index file
