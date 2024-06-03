@@ -13,6 +13,7 @@
     "express-rate-limit": "^7.2.0",
     "hono": "^4.3.11",
     "htmx.org": "^1.9.12",
+    "idiomorph": "^0.3.0",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
