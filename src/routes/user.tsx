@@ -1,159 +1,74 @@
 
 import bcrypt from 'bcryptjs';
 import { Context } from 'hono';
-import jwt from 'hono/jwt';
+//import jwt from 'hono/jwt';
+import type { FC } from 'hono/jsx'
 
-export default function(app: { post: (arg0: string, arg1: { (c: any): Promise<any>; (c: any): Promise<any>; }) => void; use: (arg0: string, arg1: (c: any, next: any) => Promise<void | Response>) => void; get: (arg0: string, arg1: { (c: any): Promise<any>; (c: any): any; (c: any): any; }) => void; }) {
+export default function(app: { all: (arg0: string, arg1: (c: any) => Response) => void; get: (arg0: string, arg1: { (c: any): any; (c: any): any; (c: any): Promise<any>; }) => void; post: (arg0: string, arg1: { (c: any): Promise<any>; (c: any): Promise<any>; }) => void; use: (arg0: string, arg1: (c: any, next: any) => Promise<any>) => void; }) {
 // ...
 
-const accountCreationPage = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account Creation</title>
-  <style>
-    :root {
-      --text: #fae0e5;
-      --background: #0e0205;
-      --primaryRT: #eb8098;
-      --secondaryRT: #712f3d;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      background-color: var(--background);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background-color: var(--secondaryRT);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .container h1 {
-      margin-top: 0;
-      color: var(--text);
-    }
-    .container form {
-      display: flex;
-      flex-direction: column;
-    }
-    .container form input {
-      margin-bottom: 10px;
-      padding: 8px;
-      font-size: 16px;
-      border-radius: 8px;
-      opacity: 40%;
-    }
-    .container form button {
-      padding: 10px;
-      background-color: var(--primaryRT);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-  </style>
-  <script src="https://lunarcascade.nl.eu.org/static/htmx.min.js"></script>
-  <script src="https://lunarcascade.nl.eu.org/static/idiomorph.ext.js">
-</head>
-<body>
-  <div class="container">
-    <h1>Create Account</h1>
-    <form hx-post="/register" hx-trigger="submit" hx-target="this" hx-swap="innerHTML">
-      <input type="text" name="username" placeholder="Enter your username" required>
-      <input type="password" name="password" placeholder="Enter your password" required>
-      <button type="submit">Create Account</button>
-    </form>
-  </div>
-</body>
-</html>
-`;
+const RegisterComponent: FC = () => {
+	return(
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Account Creation</title>
+      <script src="https://lunarcascade.nl.eu.org/static/htmx.min.js" />
+      <script src="https://lunarcascade.nl.eu.org/static/idiomorph.ext.js" />
+      <link rel="stylesheet" type="text/css" href="https://dry.nl.eu.org/rlstyle" />
+    </head>
+    <body>
+      <div class="container">
+        <h1>Create Account</h1>
+        <form hx-post="/register" hx-trigger="submit" hx-target="this" hx-swap="innerHTML">
+          <input type="text" name="username" placeholder="Enter your username" required />
+          <input type="password" name="password" placeholder="Enter your password" required />
+          <button type="submit">Create Account</button>
+        </form>
+      </div>
+    </body>
+    </html>
+)}
 
-const loginPage = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <style>
-    :root {
-      --text: #fae0e5;
-      --background: #0e0205;
-      --primaryRT: #eb8098;
-      --secondaryRT: #712f3d;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      background-color: var(--background);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background-color: var(--secondaryRT);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .container h1 {
-      margin-top: 0;
-      color: var(--text);
-    }
-    .container form {
-      display: flex;
-      flex-direction: column;
-    }
-    .container form input {
-      margin-bottom: 10px;
-      padding: 8px;
-      font-size: 16px;
-      border-radius: 8px;
-      opacity: 40%;
-    }
-    .container form button {
-      padding: 10px;
-      background-color: var(--primaryRT);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #response {
-      color: var(--text);
-    }
-  </style>
-  <script src="https://lunarcascade.nl.eu.org/static/htmx.min.js"></script>
-  <script src="https://lunarcascade.nl.eu.org/static/idiomorph.ext.js">
-</head>
-<body>
-  <div class="container">
-    <h1>Login</h1>
-    <form hx-post="/login" hx-trigger="submit" hx-target="#status" hx-swap="outerHTML" hx-swap="morph:{ignoreActiveValue:true}">
-      <input type="text" name="username" placeholder="Enter your username" required>
-      <input type="password" name="password" placeholder="Enter your password" required>
-      <button type="submit">Login</button>
-    </form>
-    <div id="response"></div>
-  </div>
-</body>
-</html>
-`
+const LoginComponent: FC = () => {
+	return(
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Login</title>
+      <script src="https://lunarcascade.nl.eu.org/static/htmx.min.js" />
+      <script src="https://lunarcascade.nl.eu.org/static/idiomorph.ext.js" />
+      <link rel="stylesheet" type="text/css" href="https://dry.nl.eu.org/rlstyle" />
+    </head>
+    <body>
+      <div class="container">
+        <h1>Login</h1>
+        <form hx-post="/login" hx-trigger="submit" hx-target="#response" hx-swap="morph:{ignoreActiveValue:true}">
+          <input type="text" name="username" placeholder="Enter your username" required />
+          <input type="password" name="password" placeholder="Enter your password" required />
+          <button type="submit">Login</button>
+        </form>
+      </div>
+      <div class="containerl"><div id="response" /></div>
+    </body>
+    </html>
+)}
+
+app.all('/rlstyle', (c) => {
+	const css = `#response,.container h1{color:var(--text)}#response{min-height:0px;min-width:0px;}:root{--text:#fae0e5;--background:#0e0205;--primaryRT:#eb8098;--secondaryRT:#712f3d}body{font-family:Arial,sans-serif;background-color:var(--background);display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0}.container{background-color:var(--secondaryRT);padding:20px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.1)}.container h1{margin-top:0}.container form{display:flex;flex-direction:column}.container form input{margin-bottom:10px;padding:8px;font-size:16px;border-radius:8px;opacity:40%}.container form button{padding:10px;background-color:var(--primaryRT);color:#fff;border:none;border-radius:8px;cursor:pointer}`
+	return new Response(css, {status: 200,headers: {"Content-Type": "text/css"}})
+})
 
 // Serve the account creation page
 app.get('/register', (c) => {
-  return c.html(accountCreationPage);
+  return c.html('<!DOCTYPE html>' + <RegisterComponent />);
 });
 
 // Serve the login page (can be combined with register page if needed)
 app.get('/login', (c) => {
-  return c.html(loginPage);
+  return c.html('<!DOCTYPE html>' + <LoginComponent />);
 });
 
 // Function to import the JWT secret key from environment variables
@@ -170,6 +85,7 @@ async function getSecretKey(context: Context) {
 
 // Function to create a JWT token
 async function createJWT(payload: { username: any; }, context: Context) {
+  console.log('Creating USER')
   const header = {
     alg: 'HS256',
     typ: 'JWT'
@@ -195,6 +111,7 @@ async function createJWT(payload: { username: any; }, context: Context) {
 
 // Function to verify a JWT token
 async function verifyJWT(token: { split: (arg0: string) => [any, any, any]; }, context: Context) {
+  console.log('Verifying USER')
   const [header, payload, signature] = token.split('.');
 
   const data = `${header}.${payload}`;
