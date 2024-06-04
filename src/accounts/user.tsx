@@ -151,7 +151,7 @@ const Account: FC<UserProps> = ({ user }) => {
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Account Creation</title>
+      <title>Account</title>
       <script src="https://lunarcascade.nl.eu.org/static/htmx.min.js" />
       <script src="https://lunarcascade.nl.eu.org/static/idiomorph.ext.js" />
       <link rel="stylesheet" type="text/css" href="https://dry.nl.eu.org/rlstyle" />

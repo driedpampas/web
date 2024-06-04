@@ -11,7 +11,7 @@ export function initializeRoutes(app: any) {
     AddRoute(app);
     Shorten(app);
     LoginPage(app);
+    Remove(app);
     LinksPage(app);
     Generic(app);
-    Remove(app);
 }
