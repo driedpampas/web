@@ -5,15 +5,10 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.9.3",
     "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.6",
     "@unkey/api": "^0.20.6",
     "bcryptjs": "^2.4.3",
-    "express-rate-limit": "^7.2.0",
-    "hono": "^4.3.11",
-    "htmx.org": "^1.9.12",
-    "jsonwebtoken": "^9.0.2"
+    "hono": "^4.3.11"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240512.0",

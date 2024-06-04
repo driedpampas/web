@@ -2,14 +2,8 @@ export default function(app: { get: (arg0: string, arg1: (c: any) => Promise<Res
 // ...
 app.get('/links', (c) => {
  
-	let additionalButton = '';
-	// Get the referer from the request headers
-	let referer = c.req.header('Referer')
+	let additionalButton = '<a href="https://dry.nl.eu.org/shorten" target="_blank" id="btn6">Link Shortener</a>';
 
-	// Check if the referer is the base domain
-	if (referer && referer.includes('dry.nl.eu.org')) 
-		{additionalButton = '<a href="https://dry.nl.eu.org/shorten" target="_blank" id="btn6">Link Shortener</a>';}
-	else {additionalButton = '<a href="https://dry.nl.eu.org/shorten" target="_blank" id="btn6">Back</a>'}
 	return c.html(`
 	<!DOCTYPE html>
 	<html lang="en">
