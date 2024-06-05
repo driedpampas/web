@@ -6,7 +6,6 @@
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@unkey/api": "^0.20.6",
     "bcryptjs": "^2.4.3",
     "hono": "^4.3.11"
   },
