@@ -151,9 +151,11 @@ const Account: FC<UserProps> = ({ user }) => (
         <script src="https://lunarcascade.nl.eu.org/static/idiomorph.ext.js" />
         <script type="application/javascript" src="https://lunarcascade.nl.eu.org/static/stopcf.js" />
         <script type="application/javascript" src="https://lunarcascade.nl.eu.org/static/account.js" />
-        <script>
-            window.username = "{user.username}";
-        </script>
+        <script
+            dangerouslySetInnerHTML={{
+                __html: `window.username = "${user.username}";`,
+            }}
+        />
         <link rel="stylesheet" type="text/css" href="https://lunarcascade.nl.eu.org/static/user.css" />
     </head>
     <body>
@@ -162,8 +164,8 @@ const Account: FC<UserProps> = ({ user }) => (
             <h1 class="grad">Welcome, {user.username}</h1>
             <h2>Account actions:</h2>
             <div id="aa">
-                <button id="b1" hx-post="/me/logout" hx-trigger="click" hx-target="#aa" hx-swap="morph:{ignoreActiveValue:true}" hx-vals={`{ "username": "${user.username}" }`}>Logout</button>
-                <button id="b2" hx-post="/me/delete" hx-trigger="click" hx-target="#aa" hx-swap="morph:{ignoreActiveValue:true}" hx-vals={`{ "username": "${user.username}" }`}>Delete Account</button>
+                <button id="b1">Logout</button>
+                <button id="b2">Delete Account</button>
             </div>
         </div>
     </body>
