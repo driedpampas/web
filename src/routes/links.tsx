@@ -14,7 +14,7 @@ const LinksPage: FC = () => (
 		<link href="https://fonts.googleapis.com/css?family=IBM%20Plex%20Sans:600|IBM%20Plex%20Sans:400" rel="stylesheet" />
 		<link href="https://fonts.googleapis.com/css?family=Manrope:700|Manrope:400" rel="stylesheet" />
 		<script src="https://lunarcascade.nl.eu.org/static/links.js" />
-		<link rel="stylesheet" type="text/css" href="https://lunarcascade.nl.eu.org/static/links.css" />``
+		<link rel="stylesheet" type="text/css" href="https://lunarcascade.nl.eu.org/static/links.css" />
 	</head>
 	<body>
 		<div class="loadiv">
