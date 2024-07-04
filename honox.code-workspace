@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../honour"
+		},
+		{
+			"path": "../honox"
+		},
+		{
+			"path": "../static"
+		}
+	],
+	"settings": {}
+}
