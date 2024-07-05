@@ -3,6 +3,11 @@ compatibility_date = "2024-04-01"
 compatibility_flags = [ "nodejs_compat" ]
 pages_build_output_dir = "./dist"
 
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "prod"
+database_id = "4c801ae7-34e2-4ba5-9a50-833ebb45ca81"
+
 # [vars]
 # MY_VAR = "my-variable"
 

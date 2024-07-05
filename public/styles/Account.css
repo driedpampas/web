@@ -76,6 +76,9 @@ h2 {
     cursor: pointer;
     border-radius: 12px;
 }
+#reg {
+    margin-top: 10px;
+}
 #aa {
     display: flex;
     column-gap: 10px;

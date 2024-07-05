@@ -24,14 +24,12 @@ html, body {
     height: 100%;
     margin: 0;
 }
-
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
-
 .boxes {
     font-family: 'Arial', sans-serif;
     background-color: var(--background);
@@ -44,13 +42,13 @@ body {
 }
 .boxes {
     backdrop-filter: blur(10px);
-    background-color: rgba(94, 94, 94, 0.171); /* Adjust color and opacity as needed */
+    background-color: rgba(94, 94, 94, 0.116); /* Adjust color and opacity as needed */
     border: 4px solid rgba(131, 131, 131, 0.397);
-    border-radius: 10px;
+    border-radius: 15px;
 }
 h1 {color: #000000;}
-h6 {color: #000000; margin-top: 0px; margin-bottom: 1em;}
 h3 {color: #ffffff; margin-top: 0px;}
+h6 {color: #000000; margin-top: 0px; margin-bottom: 1em;}
 form {
     margin-top: 20px;
     display: flex;
@@ -65,7 +63,7 @@ input {
     border-radius: 5px;
     font-size: 16px;
     background-color: var(--background);
-    color: white;
+    color: rgb(0, 0, 0);
 }
 button {
     padding: 10px 20px;
@@ -123,4 +121,10 @@ svg {
     height: 100%;
     z-index: -1;
     filter: blur(100px);
+}
+
+/*  ACCOUNT PAGES STUFF */
+#reg {
+    margin-top: 10px;
+    background-color: rgba(0, 0, 0, 0);
 }

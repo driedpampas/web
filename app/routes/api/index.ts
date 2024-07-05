@@ -1,13 +1,5 @@
-import { Hono } from 'hono'
+import { createRoute } from 'honox/factory'
 
-const app = new Hono()
-
-// matches `/about/:name`
-app.get('/', (c) => {
-    const name = c.req.param('name')
-    return c.json({
-      'your name is': name,
-    })
+export default createRoute((c) => {
+    return c.text('You have landed.')
 })
-
-export default app

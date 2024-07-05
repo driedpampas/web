@@ -1,95 +1,161 @@
-import { Context } from 'hono';
+import { Hono, Context } from 'hono';
 import { getSignedCookie, setSignedCookie } from 'hono/cookie';
-import { Hono } from 'hono';
-import { randomBytes, scrypt } from 'crypto';
+import { JwtVariables, sign, verify } from 'hono/jwt';
 
-const app = new Hono();
+type Variables = JwtVariables;
 
-async function createJWT(payload: object, context: Context): Promise<string> {
-    // JWT creation logic here
-    return "your_jwt_token";
-}
+const app = new Hono<{ Variables: Variables }>();
 
-async function hashScrypt(data: string, salt?: string): Promise<{ salt: string; hash: string }> {
-    return new Promise((resolve, reject) => {
-        // Use the provided salt or generate a new one if not provided
-        salt = salt || randomBytes(16).toString('hex');
-        scrypt(data, salt, 64, (err, derivedKey) => {
-            if (err) reject(err);
-            //@ts-ignore
-            else resolve({ salt, hash: derivedKey.toString('hex') });
-        });
-    });
-}
-
-app.post('/api/user/new', async (c: Context) => {
-    const formData = await c.req.formData();
-    const username = formData.get('username') as string;
-    const password = formData.get('password') as string;
-
-    if (!username || !password) {
-        return c.json({ error: 'Username and password are required' }, 400);
+class AuthService {
+    static async createJWT(payload: { username: string }, context: Context) {
+        const secretKey = context.env.SECRET;
+        return sign(payload, secretKey);
     }
 
-    // Hash the password using scrypt with a unique salt
-    const { salt, hash: hashedPassword } = await hashScrypt(password);
-    const saltedHashedPassword = `${salt}:${hashedPassword}`; // Concatenate salt and hashed password
-
-    // Store username and salted+hashed password in the database
-    try {
-        await c.env.DB.prepare("INSERT INTO users (username, password) VALUES (?, ?)").bind(username, saltedHashedPassword).run();
-    } catch (error) {
-        return c.json({ error: 'Error storing user in the database' }, 500);
+    static async verifyJWT(token: string, context: Context) {
+        const secretKey = context.env.SECRET;
+        return verify(token, secretKey);
     }
 
-    const token = await createJWT({ username }, c);
-    return setSignedCookie(c, 'authToken', token, c.env.SECRET, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-    }).then(() => c.text('User registered successfully'));
-});
-
-app.post('/api/user/login', async (c: Context) => {
-    const formData = await c.req.formData();
-    const username = formData.get('username') as string;
-    const password = formData.get('password') as string;
-
-    if (!username || !password) {
-        return c.json({ error: 'Username and password are required' }, 400);
-    }
-
-    // Retrieve the stored salted and hashed password from the database
-    let storedSaltedHashedPassword;
-    try {
-        const result = await c.env.DB.prepare("SELECT password FROM users WHERE username = ?").bind(username).get();
-        if (result) {
-            storedSaltedHashedPassword = result.password;
-        } else {
-            return c.json({ error: 'User not found' }, 404);
+    static async hashPassword(password: string, salt?: Uint8Array): Promise<{ salt: Uint8Array; hash: ArrayBuffer }> {
+        if (!salt) {
+            salt = crypto.getRandomValues(new Uint8Array(16));
         }
+        const enc = new TextEncoder();
+        const keyMaterial = await crypto.subtle.importKey("raw", enc.encode(password), { name: "PBKDF2" }, false, ["deriveBits"]);
+        const hash = await crypto.subtle.deriveBits(
+            {
+                name: "PBKDF2",
+                salt: salt,
+                iterations: 100000,
+                hash: "SHA-256",
+            },
+            keyMaterial,
+            256
+        );
+        return { salt, hash };
+    }
+
+    static async verifyPassword(storedHash: ArrayBuffer, password: string, salt: Uint8Array): Promise<boolean> {
+        const { hash } = await AuthService.hashPassword(password, salt);
+        return this.arrayBufferEqual(hash, storedHash);
+    }
+
+    static arrayBufferEqual(buf1: ArrayBuffer, buf2: ArrayBuffer): boolean {
+        if (buf1.byteLength !== buf2.byteLength) return false;
+        const view1 = new DataView(buf1);
+        const view2 = new DataView(buf2);
+        for (let i = 0; i < buf1.byteLength; i++) {
+            if (view1.getUint8(i) !== view2.getUint8(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static setAuthCookie(c: Context, token: string) {
+        setSignedCookie(c, 'auth_token', token, c.env.SECRET, { httpOnly: true, secure: true, sameSite: 'strict' });
+        return c.json({ success: true });
+    }
+}
+
+class UserController {
+    static async registerUser(c: Context) {
+        const formData = await c.req.formData();
+        const username = formData.get('username') as string;
+        const password = formData.get('password') as string;
+
+        if (!username || !password) {
+            return c.json({ error: 'Username and password are required' }, 400);
+        }
+
+        if (await UserService.usernameExists(username, c.env.DB)) {
+            return c.json({ error: 'Username already exists' }, 409);
+        }
+
+        const { salt, hash } = await AuthService.hashPassword(password);
+        const saltedHashedPassword = `${Buffer.from(salt).toString('hex')}:${Buffer.from(hash).toString('hex')}`;
+
+        await UserService.createUser(username, saltedHashedPassword, c.env.DB);
+
+        const token = await AuthService.createJWT({ username }, c);
+        return AuthService.setAuthCookie(c, token);
+    }
+
+    static async loginUser(c: Context) {
+        const formData = await c.req.formData();
+        const username = formData.get('username') as string;
+        const password = formData.get('password') as string;
+
+        if (!username || !password) {
+            return c.json({ error: 'Username and password are required' }, 400);
+        }
+
+        const user = await UserService.findUserByUsername(username, c.env.DB);
+        if (!user) {
+            return c.json({ error: 'Invalid username or password' }, 401);
+        }
+
+        const [saltHex, storedHashHex] = user.password.split(':');
+        const salt = new Uint8Array(Buffer.from(saltHex, 'hex'));
+        const storedHash = Buffer.from(storedHashHex, 'hex').buffer;
+
+        const { hash: hashedPassword } = await AuthService.hashPassword(password, salt);
+
+        if (!AuthService.arrayBufferEqual(hashedPassword, storedHash)) {
+            return c.json({ error: 'Invalid username or password' }, 401);
+        }
+
+        const token = await AuthService.createJWT({ username }, c);
+        return AuthService.setAuthCookie(c, token);
+    }
+}
+
+class UserService {
+    static async usernameExists(username: string, db: any): Promise<boolean> {
+        try {
+            const result = await db.prepare("SELECT username FROM users WHERE username = ?").bind(username).first();
+            return !!result; // Returns true if a result is found, otherwise false
+        } catch (error) {
+            console.error('Error checking username existence:', error);
+            throw new Error('Database operation failed');
+        }
+    }
+
+    static async createUser(username: string, hashedPassword: string, db: any): Promise<void> {
+        try {
+            await db.prepare("INSERT INTO users (username, password) VALUES (?, ?)").bind(username, hashedPassword).run();
+        } catch (error) {
+            console.error('Error creating user:', error);
+            throw new Error('Error storing user in the database');
+        }
+    }
+
+    static async findUserByUsername(username: string, db: any): Promise<{ username: string; password: string } | null> {
+        try {
+            const result = await db.prepare("SELECT * FROM users WHERE username = ?").bind(username).first();
+            return result ? { username: result.username, password: result.password } : null;
+        } catch (error) {
+            console.error('Error retrieving user from the database:', error);
+            throw new Error('Database operation failed');
+        }
+    }
+}
+
+const verifyTokenMiddleware = async (c: Context, next: () => Promise<void>) => {
+    const token = await getSignedCookie(c, c.env.SECRET, 'authToken');
+    if (!token) {
+        return c.json({ error: 'Authentication required' }, 401);
+    }
+
+    try {
+        await AuthService.verifyJWT(token, c);
+        await next();
     } catch (error) {
-        return c.json({ error: 'Error accessing the database' }, 500);
+        return c.json({ error: 'Invalid or expired token' }, 401);
     }
+};
 
-    // Extract the salt from the stored password
-    const [storedSalt, storedHashedPassword] = storedSaltedHashedPassword.split(':');
-
-    // Hash the provided password using the stored salt
-    const { hash: hashedPassword } = await hashScrypt(password, storedSalt);
-
-    // Compare the hashed passwords
-    if (hashedPassword !== storedHashedPassword) {
-        return c.json({ error: 'Invalid username or password' }, 401);
-    }
-
-    // Generate a JWT for the user
-    const token = await createJWT({ username }, c);
-
-    // Set the JWT in a signed cookie
-    return setSignedCookie(c, 'authToken', token, c.env.SECRET, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-    }).then(() => c.text('Login successful'));
-});
+app.post('/api/user/new', UserController.registerUser);
+app.post('/api/user/login', UserController.loginUser);
+//app.use('/me', verifyTokenMiddleware, UserController.getUserInfo);

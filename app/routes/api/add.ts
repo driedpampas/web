@@ -1,9 +1,9 @@
+import { Context } from 'hono';
 import { getSignedCookie } from 'hono/cookie'
-import { bearerAuth } from 'hono/bearer-auth'
+import { createRoute } from 'honox/factory';
+//import { bearerAuth } from 'hono/bearer-auth'
 
-export default function(app: { post: (arg0: string, arg1: (c: any) => Promise<Response>) => void; get: (arg0: string, arg1: (c: any) => Promise<Response>) => void; }) {
-// ...
-app.post('/v1/add',  async (c) => {
+export const POST = createRoute(async (c: Context) => {
     try {
     const apiKey = await getSignedCookie(c, c.env.PASSWORD, 'keyID');
     if (!apiKey) {return c.text('Unauthorized, please log in', 401)}
@@ -50,11 +50,9 @@ app.post('/v1/add',  async (c) => {
     } catch (e) {console.error(e);}
 }})
 
-app.get('/v1/add', async (c: any) => {
+export default createRoute(async (c) => {
     return new Response("docs are wip", {
         status: 200,
         headers: {"Content-Type": "text/html"}
     })
 })
-// ...
-}
