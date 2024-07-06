@@ -33,7 +33,7 @@ export default createRoute((c) => {
         <UserButton />
       </div>
       <h1>Canada Dry</h1>
-      <h6>what's a service of terms?</h6>
+      <a href="https://next.dry.nl.eu.org/tos"><h6>what's a service of terms?</h6></a>
       <input type="text" id="link-input" name="link" placeholder="Enter a link" hx-post="/api/add" hx-swap="morph:{ignoreActiveValue:true}" hx-target="#shortened-link" hx-trigger="click from:#submit-link" required />
       <button id="submit-link">Submit</button>
       <div id="shortened-link"></div>

@@ -1,6 +1,6 @@
 import { jsxRenderer } from 'hono/jsx-renderer'
 
-export default jsxRenderer(({ children, title }) => {
+export default jsxRenderer(({ children, title, js, inlineScript }) => {
   return (
     <html lang="en">
       <head>
@@ -9,9 +9,12 @@ export default jsxRenderer(({ children, title }) => {
         <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="stylesheet" href={`/styles/Shorten.css`} />
-        <script src={`/js/${title}.js`} />
+        {js && <script src={`/js/${title}.js`} />}
         <script src={`/ds/htmx.min.js`} />
         <script src={`/js/stopcf.js`} />
+        {inlineScript && (
+          <script dangerouslySetInnerHTML={{ __html: inlineScript }} />
+        )}
       </head>
       <body>{children}</body>
     </html>

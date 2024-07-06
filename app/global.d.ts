@@ -2,6 +2,8 @@ import {} from 'hono'
 
 type Head = {
   title?: string
+  js?: yes
+  inlineScript?: any
 }
 
 declare module 'hono' {

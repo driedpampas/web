@@ -44,9 +44,9 @@ export const POST = createRoute(async (c: Context) => {
     } else try {
 
     const id = Math.random().toString(36).substring(2, 10);
-    await c.env.DB.prepare("INSERT INTO links (id, src, curl) VALUES (?, ?, ?)").bind(id, src, `https://dry.nl.eu.org/${id}`).run();
+    await c.env.DB.prepare("INSERT INTO links (id, src, curl) VALUES (?, ?, ?)").bind(id, src, `https://dry.nl.eu.org/r/${id}`).run();
 
-    return new Response(JSON.stringify({ id: id, link: `https://dry.nl.eu.org/${id}` }), {status: 200, headers: { 'Content-Type': 'application/json' }});
+    return new Response(JSON.stringify({ id: id, link: `https://dry.nl.eu.org/r/${id}` }), {status: 200, headers: { 'Content-Type': 'application/json' }});
     } catch (e) {console.error(e);}
 }})
 
