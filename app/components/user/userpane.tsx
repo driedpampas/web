@@ -76,8 +76,8 @@ const UserPane: FC<{ c: Context, view: 'login' | 'register' | 'userAccount' }> =
                     <input type="password" name="password" placeholder="Enter your password" required />
                     <button type="submit">Login</button>
                 </form>
-                <button id="reg" onClick={() => window.location.href='/me/register'}>
-                    Don't have an account? Register
+                <button class="reg">
+                    <a href='/me/register'>Don't have an account? Register</a>
                 </button>
             </>
         );
@@ -91,8 +91,8 @@ const UserPane: FC<{ c: Context, view: 'login' | 'register' | 'userAccount' }> =
                 <input type="password" name="password" placeholder="Enter your password" required />
                 <button type="submit">Register</button>
             </form>
-            <button id="reg" onClick={() => window.location.href='/me/login'}>
-                Already have an account? Login
+            <button class="reg">
+                <a href='/me/login'>Already have an account? Login</a>
             </button>
         </>
     );

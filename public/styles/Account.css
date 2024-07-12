@@ -1,21 +1,3 @@
-@media (prefers-color-scheme: light) {
-:root {
-    --text: #130903;
-    --background: #fdf8f5;
-    --primary: #dc7f3b;
-    --secondary: #e1b49a;
-    --accent: #d2ab68;
-    }
-}
-@media (prefers-color-scheme: dark) {
-:root {
-    --text: #fcf3ed;
-    --background: #090402;
-    --primary: #c36522;
-    --secondary: #66391e;
-    --accent: #956f2d;
-    }
-}
 body {
     font-family: Arial, sans-serif;
     background-color: var(--background);
@@ -38,6 +20,7 @@ body {
 }
 h1,
 h2 {
+    margin-top: 0%;
     color: var(--text);
 }
 .container form {
@@ -76,9 +59,6 @@ h2 {
     cursor: pointer;
     border-radius: 12px;
 }
-#reg {
-    margin-top: 10px;
-}
 #aa {
     display: flex;
     column-gap: 10px;
@@ -92,3 +72,23 @@ h2 {
     color: white;
     background-color: #f25f5c;
 }
+.reg {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    background-color: rgba(0, 0, 0, 0.253);
+    border-radius: 0 0 5px 5px;
+    border-width: 5px;
+    border-color: rgba(0, 0, 0, 0.561);
+    height: 50px;
+    max-width: calc(70vw - 20px);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+.reg a {
+    display: flex;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 12px;
+}
+

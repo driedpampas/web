@@ -37,3 +37,4 @@ lerna-debug.log*
 # local
 !*.code-workspace
 honox.*
+app/routes/api/rendercheck.tsx

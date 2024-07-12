@@ -1,24 +1,19 @@
-:root {
-    --color1: #B071FF;
-    --color2: #FF9C71;
+:root[data-theme="light"] {
+    --text: #17051f;
+    --background: #fcf6fe;
+    --primary: #591376;
+    --secondary: #c9b0a1;
+    --accent: #1db968;
+    --inverse: var(--background)
+
 }
-@media (prefers-color-scheme: light) {
-    :root {
-        --text: #130903;
-        --background: #fdf8f5;
-        --primary: #dc7f3b;
-        --secondary: #e1b49a;
-        --accent: #d2ab68;
-    }
-}
-@media (prefers-color-scheme: dark) {
-:root {
-    --text: #fcf3ed;
-    --background: #090402;
-    --primary: #c36522;
-    --secondary: #66391e;
-    --accent: #956f2d;
-    }
+:root[data-theme="dark"] {
+    --text: #f2e0fa;
+    --background: #070109;
+    --primary: #ce89ec;
+    --secondary: #5e4536;
+    --accent: #46e291;
+    --inverse: var(--text)
 }
 html, body {
     height: 100%;
@@ -29,6 +24,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: var(--background);
 }
 .boxes {
     font-family: 'Arial', sans-serif;
@@ -49,9 +45,9 @@ body {
     border: 4px solid rgba(131, 131, 131, 0.397);
     border-radius: 15px;
 }
-h1 {color: #000000;}
-h3 {color: #ffffff; margin-top: 0px;}
-h6 {color: #000000; margin-top: 0px; margin-bottom: 1em;}
+h1 {color: var(--text);}
+h3 {color: car(--background); margin-top: 0px;}
+h6 {color: var(--text); margin-top: 0px; margin-bottom: 1em;}
 form {
     margin-top: 20px;
     display: flex;
@@ -65,17 +61,20 @@ input {
     border: 1px solid var(--accent);
     border-radius: 5px;
     font-size: 16px;
-    background-color: var(--background);
-    color: rgb(0, 0, 0);
+    background-color: rgba(94, 94, 94, 0.116);
+    color: var(--text)
 }
 button {
     padding: 10px 20px;
     background-color: var(--accent);
-    color: #ffffff;
+    color: var(--background);
     border: none;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
+}
+button[data-theme="dark"] {
+    background-color: var(--primary);
 }
 button:hover {
     background-color: var(--secondary);
@@ -93,7 +92,7 @@ button:hover {
 }
 #shortened-link li::before {
     content: "\\2022"; /* Unicode character for a bullet point (\u25cb) */
-    color: #4caf50; 
+    color: var(--accent); 
     display: inline-block;
     width: 1em;
     margin-left: -1em;
@@ -106,12 +105,21 @@ button:hover {
     backdrop-filter: blur(10px);
     border-radius: 15px;
 }
-a {
+.header a {
     display: flex;
-    color: #ffffff;
+    color: var(--inverse);
     text-decoration: none;
     font-size: 1.2em;
-    margin: 0 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+.hsvg {
+    position: inherit;
+    filter: none;
+    margin-right: 5px;
+}
+.header a[data-theme="light"] {
+    color: var(--background);
 }
 .header img {
     margin-right: 5px;
@@ -124,20 +132,6 @@ svg {
     height: 100%;
     z-index: -1;
     filter: blur(100px);
-}
-
-/*  ACCOUNT PAGES STUFF */
-#reg {
-    margin-top: 10px;
-    background-color: rgba(0, 0, 0, 0.253);
-    border-radius: 0 0 5px 5px;
-    border-width: 5px;
-    border-color: rgba(0, 0, 0, 0.561);
-    height: 50px;
-    max-width: calc(70vw - 20px);
-    width: 100%;
-    position: absolute;
-    bottom: 0;
 }
 
 /* Error page stuff */

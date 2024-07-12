@@ -2,13 +2,16 @@ import {} from 'hono'
 
 type Head = {
   title?: string
-  js?: yes
+  js?: yes | string
   inlineScript?: any
+  css?: boolean | string
 }
 
 declare module 'hono' {
   interface Env {
-    Variables: {}
+    Variables: {
+      SECRET: string
+    }
     Bindings: {}
   }
   interface ContextRenderer {

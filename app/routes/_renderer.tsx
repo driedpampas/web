@@ -1,6 +1,7 @@
 import { jsxRenderer } from 'hono/jsx-renderer'
+import { Script } from 'honox/server'
 
-export default jsxRenderer(({ children, title, js, inlineScript }) => {
+export default jsxRenderer(({ children, title, js, css, inlineScript }) => {
   return (
     <html lang="en">
       <head>
@@ -9,16 +10,17 @@ export default jsxRenderer(({ children, title, js, inlineScript }) => {
         <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="stylesheet" href={`/styles/Shorten.css`} />
-        {js && <script src={`/js/${title}.js`} />}
+        {js ? <script src={`/js/${js}.js`} /> : <script src={`/js/${title}.js`} />}
+        {css ? <link rel="stylesheet" href={`/styles/${css}.css`} /> : ""}
         <script src={`/ds/htmx.min.js`} />
         <script src={`/js/stopcf.js`} />
+        <Script src="/app/client.ts" async />
         {inlineScript && (
           <script dangerouslySetInnerHTML={{ __html: inlineScript }} />
         )}
       </head>
+      <noscript>Javascript seems to be disabled. If this is an error, please report it.</noscript>  
       <body>{children}</body>
     </html>
   )
 })
-
-//        <link rel="stylesheet" href={`/styles/${title}.css`} />

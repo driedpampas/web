@@ -6,8 +6,16 @@ const app = new Hono()
 
 app.get('/:link', async (c: Context) => {
     const linkId = c.req.param('link')
-    //const linkId = c.req.url.slice(22);
     console.log(linkId);
+
+    if (!linkId) {
+        return c.render(
+            <BoxContainer color='rgba(196, 81, 81, 0.582)'>
+                <h1>No shortlink was passed or there was an error.</h1>
+            </BoxContainer>,
+            { title: 'Not found' }
+        )
+    }
     
     const { results } = await c.env.DB.prepare("SELECT * FROM links WHERE id = ?").bind(linkId).all();
     

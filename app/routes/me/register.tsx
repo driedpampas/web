@@ -7,9 +7,11 @@ export default createRoute(async (c) => {
         <BoxContainer>
             <UserPane c={c} view='register' />
         </BoxContainer>,
-        { title: 'Register', inlineScript: `
+        { title: 'Register',
+            css: 'Account',
+            inlineScript: `
 window.onload = function() {
-    const regElement = document.getElementById('reg');
+    const regElement = document.querySelector('.reg');
     if (regElement) {
         const parentElement = regElement.parentNode;
 
