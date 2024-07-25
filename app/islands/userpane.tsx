@@ -1,6 +1,7 @@
 import { getSignedCookie } from 'hono/cookie';
 import { FC, useEffect, useState } from 'hono/jsx';
 import type { Context } from 'hono';
+import './css/Account.css'
 
 const canSetCookies = () => {
     try {
@@ -70,7 +71,7 @@ const UserPane: FC<{ c: Context, view: 'login' | 'register' | 'userAccount' }> =
     if (currentPage === 'login') {
         return (
             <>
-                <h1>Login</h1>
+                <h1 className="L">Login</h1>
                 <form hx-post="/api/user/login" hx-trigger="submit" hx-target="this" hx-swap="innerHTML" id="loginForm">
                     <input type="text" name="username" placeholder="Enter your username" required />
                     <input type="password" name="password" placeholder="Enter your password" required />
@@ -85,7 +86,7 @@ const UserPane: FC<{ c: Context, view: 'login' | 'register' | 'userAccount' }> =
 
     return (
         <>
-            <h1>Register</h1>
+            <h1 className="L">Register</h1>
             <form hx-post="/api/user/new" hx-trigger="submit" hx-target="this" hx-swap="innerHTML" id="registerForm">
                 <input type="text" name="username" placeholder="Enter your username" required />
                 <input type="password" name="password" placeholder="Enter your password" required />

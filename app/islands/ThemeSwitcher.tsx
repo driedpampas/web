@@ -1,5 +1,5 @@
 import { useEffect, useState } from "hono/jsx";
-import '../components/ThemeSwitcher/ThemeSwitcher.css';
+import './css/ThemeSwitcher.css';
 
 function SunIcon() {
     return (

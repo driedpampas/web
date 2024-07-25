@@ -23,6 +23,11 @@ h2 {
     margin-top: 0%;
     color: var(--text);
 }
+.L {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .container form {
     display: flex;
     flex-direction: column;
@@ -50,7 +55,6 @@ h2 {
 }
 #submit, button {
     border: none;
-    padding: 15px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -58,6 +62,9 @@ h2 {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 12px;
+}
+#submit {
+    padding: 10px 20px;
 }
 #aa {
     display: flex;
@@ -73,8 +80,7 @@ h2 {
     background-color: #f25f5c;
 }
 .reg {
-    margin-top: 10px;
-    margin-bottom: 0px;
+    margin: 10px 0px 0px 0px;
     background-color: rgba(0, 0, 0, 0.253);
     border-radius: 0 0 5px 5px;
     border-width: 5px;
@@ -84,11 +90,14 @@ h2 {
     width: 100%;
     position: absolute;
     bottom: 0;
+    left: 0;
 }
 .reg a {
     display: flex;
+    justify-content: center;
+    align-items: center;
     color: #ffffff;
     text-decoration: none;
-    font-size: 12px;
+    font-size: 14px;
 }
 

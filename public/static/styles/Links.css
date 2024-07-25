@@ -3,11 +3,12 @@
 }
 @media (prefers-color-scheme: light) {
     :root {
-        --text: #130903;
-        --background: #fdf8f5;
-        --primary: #dc7f3b;
-        --secondary: #e1b49a;
-        --accent: #d2ab68;
+        --text: #17051f;
+        --background: #fcf6fe;
+        --primary: #591376;
+        --secondary: #c9b0a1;
+        --accent: #1db968;
+        --inverse: var(--background)   
     }
     #btn2 {color: var(--background)}
     #btn3 {color: var(--background)}
@@ -16,11 +17,12 @@
 }
 @media (prefers-color-scheme: dark) {
     :root {
-        --text: #fcf3ed;
-        --background: #090402;
-        --primary: #c36522;
-        --secondary: #66391e;
-        --accent: #956f2d;
+        --text: #f2e0fa;
+        --background: #070109;
+        --primary: #ce89ec;
+        --secondary: #5e4536;
+        --accent: #46e291;
+        --inverse: var(--text)
     }
 }
 

@@ -5,7 +5,6 @@
     --secondary: #c9b0a1;
     --accent: #1db968;
     --inverse: var(--background)
-
 }
 :root[data-theme="dark"] {
     --text: #f2e0fa;
