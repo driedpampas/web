@@ -1,22 +1,26 @@
-import { getSignedCookie } from 'hono/cookie';
+import { getSignedCookie, setCookie } from 'hono/cookie';
 import { FC, useEffect, useState } from 'hono/jsx';
-import type { Context } from 'hono';
+import { Context } from 'hono';
 import './css/Account.css'
+import { env } from 'hono/adapter';
 
-const canSetCookies = () => {
+const canSetCookies = (c: Context) => {
     try {
+        setCookie(c, 'testCookie', '1')
         document.cookie = "testcookie=1";
         const canSet = document.cookie.indexOf("testcookie=") !== -1;
-        // Clean up the test cookie
         document.cookie = "testcookie=1; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         return canSet;
     } catch (e) {
-        return false;
+        throw e;
     }
 };
 
 async function isAuthenticated(c: Context) {
-    const token = await getSignedCookie(c, c.env.PASSWORD, 'authToken');
+    const { SECRET } = env(c)
+    const token = await getSignedCookie(c, SECRET, 'authToken');
+
+    //const token = await getSignedCookie(c, c.env.PASSWORD, 'authToken');
     return !!token;
 }
 
@@ -29,7 +33,7 @@ const UserPane: FC<{ c: Context, view: 'login' | 'register' | 'userAccount' }> =
         let isMounted = true;
 
         const fetchData = async () => {
-            if (!canSetCookies()) {
+            if (!canSetCookies(c)) {
                 setShowDialog(true);
             } else {
                 const authenticated = await isAuthenticated(c);
@@ -49,9 +53,10 @@ const UserPane: FC<{ c: Context, view: 'login' | 'register' | 'userAccount' }> =
 
     if (showDialog) {
         return (
-            <div className="container">
+            <>
+                <h1 className="L">Error</h1>
                 <p>Authentication requires cookies, which seem to be disabled. If this is an error, please report it.</p>
-            </div>
+            </>
         );
     }
 

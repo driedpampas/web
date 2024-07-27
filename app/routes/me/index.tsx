@@ -1,11 +1,13 @@
 import { createRoute } from "honox/factory"
 import UserPane from "../../islands/userpane"
 import BoxContainer from "../../components/boxtainer"
-import { getSignedCookie } from "hono/cookie";
 import { Context } from "hono";
+import { getSignedCookie } from "hono/cookie";
+import { env } from "hono/adapter";
 
 export default createRoute(async (c: Context) => {
-  const token = await getSignedCookie(c, c.env.SECRET, 'authToken');
+  const { SECRET } = env(c)
+    const token = await getSignedCookie(c, SECRET, 'authToken');
   if (token) {
     return c.render(
       <BoxContainer>

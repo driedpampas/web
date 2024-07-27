@@ -20,5 +20,5 @@ footer pre {
   backdrop-filter: blur(10px);
   background-color: rgba(94, 94, 94, 0.116);
   border-radius: 1em;
-  margin: 0.5em 0px 0px 0px;
+  margin: 0.5em 0px 0px 0.5em;
 }

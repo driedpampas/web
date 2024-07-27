@@ -1,12 +1,12 @@
-import { Hono, Context } from 'hono';
+import { /*Hono,*/ Context } from 'hono';
 import { getSignedCookie, setSignedCookie } from 'hono/cookie';
-import { JwtVariables, sign, verify } from 'hono/jwt';
+import { /*JwtVariables,*/ sign, verify } from 'hono/jwt';
 
-type Variables = JwtVariables;
+//type Variables = JwtVariables;
 
-const app = new Hono<{ Variables: Variables }>();
+//const app = new Hono<{ Variables: Variables }>();
 
-class AuthService {
+export class AuthService {
     static async createJWT(payload: { username: string }, context: Context) {
         const secretKey = context.env.SECRET;
         return sign(payload, secretKey);
@@ -109,9 +109,13 @@ class UserController {
         const token = await AuthService.createJWT({ username }, c);
         return AuthService.setAuthCookie(c, token);
     }
+
+    static async getRequest(c: Context) {
+        return c.json({ info: 'Invalid method or unknown error'}, 200)
+    }
 }
 
-class UserService {
+export class UserService {
     static async usernameExists(username: string, db: any): Promise<boolean> {
         try {
             const result = await db.prepare("SELECT username FROM users WHERE username = ?").bind(username).first();
@@ -156,6 +160,7 @@ const verifyTokenMiddleware = async (c: Context, next: () => Promise<void>) => {
     }
 };
 
-app.post('/api/user/new', UserController.registerUser);
-app.post('/api/user/login', UserController.loginUser);
+//app.post('/api/user/new', UserController.registerUser);
+//app.post('/api/user/login', UserController.loginUser);
+//app.get('/api/user/*', UserController.getRequest)
 //app.use('/me', verifyTokenMiddleware, UserController.getUserInfo);

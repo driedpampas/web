@@ -77,7 +77,8 @@ function SpinnerIcon() {
 const Footer = ({ branch }: FooterProps) => {
     const [commitId, setCommitId] = useState('');
     const [loading, setLoading] = useState(true);
-  
+    const [hasError, setHasError] = useState(false);
+
     useEffect(() => {
         const fetchCommitId = async () => {
             try {
@@ -87,17 +88,23 @@ const Footer = ({ branch }: FooterProps) => {
                 setCommitId(latestCommitId.substring(0, 6));
             } catch (error) {
                 console.error('Error fetching commit ID:', error);
+                setHasError(true);
+                return;
             } finally {
                 setLoading(false);
             }
         };
-        
-            fetchCommitId();
+
+        fetchCommitId();
     }, [branch]);
-  
+
+    if (hasError) {
+        return null;
+    }
+
     return (
         <footer>
-        Version: {loading ? (
+            Version {loading ? (
                 <SpinnerIcon />
             ) : (
                 <pre>{commitId}</pre>
@@ -105,5 +112,5 @@ const Footer = ({ branch }: FooterProps) => {
         </footer>
     );
 };
-    
+
 export default Footer;
