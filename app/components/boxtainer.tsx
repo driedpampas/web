@@ -2,16 +2,18 @@
 import { CSSProperties } from 'react';
 import ThemeSwitcher from '../islands/ThemeSwitcher';
 import RefreshBtn from '../islands/RefreshBtn';
+import Footer from '../islands/Footer';
 
 interface BoxContainerProps {
     children: any;
     color?: string;
+    color2?: string;
     style?: CSSProperties;
 }
 
 const BoxContainer = (props: BoxContainerProps) => {
     const stopColor1 = props.color ? props.color : "var(--accent)";
-    const stopColor2 = props.color ? props.color : "var(--primary)";
+    const stopColor2 = props.color2 ? props.color2 : props.color ? props.color : "var(--primary)";
     return (
         <>
             <svg viewBox="0 0 200 200" version="1.1" id="svg1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
@@ -29,6 +31,7 @@ const BoxContainer = (props: BoxContainerProps) => {
             <RefreshBtn />
                 {props.children}
             </div>
+            <Footer branch="next" />
         </>
     );
 };
