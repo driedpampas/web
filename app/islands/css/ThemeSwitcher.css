@@ -1,21 +1,16 @@
 .theme-button {
-    margin: 20px 0px 0px 20px;
     background: none;
     border: none;
     cursor: pointer;
-    position: absolute;
-    left: 0;
-    top: 0;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.50);
-    backdrop-filter: blur(10px);
     border-radius: 15px;
     width: 47px;
     height: 47px;
 }
 
 .theme-button:hover {
-    background-color: var(--primary);
+    color: none;
+    background-color: none;
 }
 
 .theme-icon {
@@ -35,8 +30,6 @@
 .theme-menu {
     display: none;
     position: absolute;
-    top: 100%;
-    left: 0;
     background-color: var(--background);
     backdrop-filter: blur(10px);
     border: 1px solid var(--text);

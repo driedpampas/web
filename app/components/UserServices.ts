@@ -59,62 +59,6 @@ export class AuthService {
     }
 }
 
-class UserController {
-    static async registerUser(c: Context) {
-        const formData = await c.req.formData();
-        const username = formData.get('username') as string;
-        const password = formData.get('password') as string;
-
-        if (!username || !password) {
-            return c.json({ error: 'Username and password are required' }, 400);
-        }
-
-        if (await UserService.usernameExists(username, c.env.DB)) {
-            return c.json({ error: 'Username already exists' }, 409);
-        }
-
-        const { salt, hash } = await AuthService.hashPassword(password);
-        const saltedHashedPassword = `${Buffer.from(salt).toString('hex')}:${Buffer.from(hash).toString('hex')}`;
-
-        await UserService.createUser(username, saltedHashedPassword, c.env.DB);
-
-        const token = await AuthService.createJWT({ username }, c);
-        return AuthService.setAuthCookie(c, token);
-    }
-
-    static async loginUser(c: Context) {
-        const formData = await c.req.formData();
-        const username = formData.get('username') as string;
-        const password = formData.get('password') as string;
-
-        if (!username || !password) {
-            return c.json({ error: 'Username and password are required' }, 400);
-        }
-
-        const user = await UserService.findUserByUsername(username, c.env.DB);
-        if (!user) {
-            return c.json({ error: 'Invalid username or password' }, 401);
-        }
-
-        const [saltHex, storedHashHex] = user.password.split(':');
-        const salt = new Uint8Array(Buffer.from(saltHex, 'hex'));
-        const storedHash = Buffer.from(storedHashHex, 'hex').buffer;
-
-        const { hash: hashedPassword } = await AuthService.hashPassword(password, salt);
-
-        if (!AuthService.arrayBufferEqual(hashedPassword, storedHash)) {
-            return c.json({ error: 'Invalid username or password' }, 401);
-        }
-
-        const token = await AuthService.createJWT({ username }, c);
-        return AuthService.setAuthCookie(c, token);
-    }
-
-    static async getRequest(c: Context) {
-        return c.json({ info: 'Invalid method or unknown error'}, 200)
-    }
-}
-
 export class UserService {
     static async usernameExists(username: string, db: any): Promise<boolean> {
         try {

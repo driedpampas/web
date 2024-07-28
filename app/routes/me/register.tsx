@@ -8,7 +8,6 @@ export default createRoute(async (c: Context) => {
         <BoxContainer>
             <UserPane c={c} view='register' />
         </BoxContainer>,
-        { title: 'Register',
-            js: 'sso'}
+        { title: 'Register' }
     );
 });

@@ -1,12 +1,9 @@
-import { getSignedCookie, setCookie } from 'hono/cookie';
 import { FC, useEffect, useState } from 'hono/jsx';
 import { Context } from 'hono';
 import './css/Account.css'
-import { env } from 'hono/adapter';
 
-const canSetCookies = (c: Context) => {
+const canSetCookies = () => {
     try {
-        setCookie(c, 'testCookie', '1')
         document.cookie = "testcookie=1";
         const canSet = document.cookie.indexOf("testcookie=") !== -1;
         document.cookie = "testcookie=1; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -16,31 +13,16 @@ const canSetCookies = (c: Context) => {
     }
 };
 
-async function isAuthenticated(c: Context) {
-    const { SECRET } = env(c)
-    const token = await getSignedCookie(c, SECRET, 'authToken');
-
-    //const token = await getSignedCookie(c, c.env.PASSWORD, 'authToken');
-    return !!token;
-}
-
 const UserPane: FC<{ c: Context, view: 'login' | 'register' | 'userAccount' }> = ({ c, view }) => {
     const [showDialog, setShowDialog] = useState(false);
     const [currentPage, setCurrentPage] = useState<'login' | 'register' | 'userAccount'>(view);
-    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
 
         const fetchData = async () => {
-            if (!canSetCookies(c)) {
+            if (!canSetCookies()) {
                 setShowDialog(true);
-            } else {
-                const authenticated = await isAuthenticated(c);
-                if (isMounted) {
-                    setIsUserAuthenticated(authenticated);
-                    setCurrentPage(authenticated ? 'userAccount' : view);
-                }
             }
         };
 
@@ -60,15 +42,18 @@ const UserPane: FC<{ c: Context, view: 'login' | 'register' | 'userAccount' }> =
         );
     }
 
-    if (isUserAuthenticated) {
+    if (currentPage === 'userAccount') {
         return (
-            <div className="container">
-                <h1>Welcome</h1>
+            <div className="account">
+                <pre className="grad">Improvements and an actual purpose will be coming. Stay tuned!</pre>
                 <h2>Account actions:</h2>
-                <div id="aa">
-                    <button id="b1">Logout</button>
-                    <button id="b2">Delete Account</button>
+                <div id="actions">
+                    <button id="logout">Logout</button>
+                    <button id="delete">Delete Account</button>
                 </div>
+                <button class="reg">
+                    <a href='/shorten'>Back home</a>
+                </button>
             </div>
         );
     }

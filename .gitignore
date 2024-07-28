@@ -38,3 +38,5 @@ lerna-debug.log*
 !*.code-workspace
 honox.*
 app/routes/api/rendercheck.tsx
+.bs/
+schemas/

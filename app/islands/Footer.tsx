@@ -75,7 +75,7 @@ function SpinnerIcon() {
 }
 
 const Footer = ({ branch }: FooterProps) => {
-    const [commitId, setCommitId] = useState('');
+    const [commitId, setCommitId] = useState('????');
     const [loading, setLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
 
@@ -100,6 +100,14 @@ const Footer = ({ branch }: FooterProps) => {
 
     if (hasError) {
         return null;
+    }
+
+    if (!import.meta.env.PROD) {
+        return (
+            <footer>
+                <pre>Dev mode</pre>
+            </footer>
+        );
     }
 
     return (

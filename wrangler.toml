@@ -8,6 +8,11 @@ compatibility_date = "2024-04-01"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[env.production.d1_databases]]
-database_id = "4c801ae7-34e2-4ba5-9a50-833ebb45ca81"
+database_id = "941ba580-655b-431e-b35f-a7a1a3b9b37b"
 binding = "DB"
-database_name = "DB"
+database_name = "web"
+
+[[d1_databases]]
+binding = "DB" # available in your Worker on env.DB
+database_name = "web"
+database_id = "941ba580-655b-431e-b35f-a7a1a3b9b37b"

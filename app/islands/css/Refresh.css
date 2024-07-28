@@ -1,14 +1,10 @@
 .refresh {
-    margin: 20px 20px 0px 0px;
     background: none;
     border: none;
     cursor: pointer;
-    position: absolute;
     right: 0;
     top: 0;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.50);
-    backdrop-filter: blur(10px);
     border-radius: 15px;
     width: 47px;
     height: 47px;

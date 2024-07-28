@@ -8,18 +8,14 @@ body {
     height: 100vh;
     margin: 0;
 }
-.container {
-    background-color: var(--secondary);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 .container h1 {
     margin-top: 0;
     margin-bottom: 0;
 }
 h1,
 h2 {
+    display: flex;
+    justify-content: center;
     margin-top: 0%;
     color: var(--text);
 }
@@ -28,31 +24,15 @@ h2 {
     justify-content: center;
     align-items: center;
 }
-.container form {
-    display: flex;
-    flex-direction: column;
-}
-.container form input {
-    margin-bottom: 10px;
-    padding: 8px;
-    font-size: 16px;
-    border-radius: 8px;
-    opacity: 40%;
-}
-.container form button {
-    padding: 10px;
-    background-color: var(--primary);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
 .grad {
     background: linear-gradient(45deg, #da7377, #f1bd5b, #e9de7a, #7be677, #93dde2, #8283e2, #d894df);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    backdrop-filter: blur(10px);
+    background-color: rgb(37, 36, 36);
 }
+
 #submit, button {
     border: none;
     text-align: center;
@@ -60,22 +40,25 @@ h2 {
     display: inline-block;
     font-size: 16px;
     margin: 4px 2px;
-    cursor: pointer;
     border-radius: 12px;
+    padding: 10px 20px;
+    background-color: var(--accent);
+    color: var(--text);
+    cursor: pointer;
 }
 #submit {
     padding: 10px 20px;
 }
-#aa {
+#actions {
     display: flex;
     column-gap: 10px;
     justify-content: center;
 }
-#b1 {
+#logout {
     color: var(--text);
     background-color: var(--background);
 }
-#b2 {
+#delete {
     color: white;
     background-color: #f25f5c;
 }
@@ -101,3 +84,10 @@ h2 {
     font-size: 14px;
 }
 
+honox-island:has(> .reg) {
+    padding-bottom: 40px;
+}
+
+honox-island:has(> .account) {
+    padding-bottom: 50px;
+}

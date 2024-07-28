@@ -1,0 +1,7 @@
+pre {
+    font-size: 20px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    background-color: rgba(94, 94, 94, 0.116);
+    border-radius: 15px;
+}

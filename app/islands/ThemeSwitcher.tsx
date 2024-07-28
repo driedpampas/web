@@ -4,7 +4,7 @@ import './css/ThemeSwitcher.css';
 function SunIcon() {
     return (
     <svg fill="none" strokeWidth="1.5" color="#000" viewBox="0 0 24 24" >
-        <path stroke="var(--background)" strokeLinecap="round" strokeLinejoin="round" d="M12 18a6 6 0 100-12 6 6 0 000 12zM22 12h1M12 2V1M12 23v-1M20 20l-1-1M20 4l-1 1M4 20l1-1M4 4l1 1M1 12h1" />
+        <path stroke="var(--text)" strokeLinecap="round" strokeLinejoin="round" d="M12 18a6 6 0 100-12 6 6 0 000 12zM22 12h1M12 2V1M12 23v-1M20 20l-1-1M20 4l-1 1M4 20l1-1M4 4l1 1M1 12h1" />
     </svg>
 )};
 
@@ -57,17 +57,15 @@ export default function ThemeSwitcher() {
     };
 
     return (
-        <div className="theme-switcher">
-            <button className="theme-button">
-                <div className="theme-icon">
-                    {Icon}
-                </div>
-                <div className="theme-menu">
-                    <p onClick={() => handleThemeChange("light")}>Light</p>
-                    <p onClick={() => handleThemeChange("dark")}>Dark</p>
-                    <p onClick={() => handleThemeChange("system")}>System</p>
-                </div>
-            </button>
-        </div>
+        <button className="theme-button">
+            <div className="theme-icon">
+                {Icon}
+            </div>
+            <div className="theme-menu">
+                <p onClick={() => handleThemeChange("light")}>Light</p>
+                <p onClick={() => handleThemeChange("dark")}>Dark</p>
+                <p onClick={() => handleThemeChange("system")}>System</p>
+            </div>
+        </button>
     );
 }

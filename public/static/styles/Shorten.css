@@ -63,7 +63,7 @@ input {
     background-color: rgba(94, 94, 94, 0.116);
     color: var(--text)
 }
-button {
+#submit-link {
     padding: 10px 20px;
     background-color: var(--accent);
     color: var(--background);
@@ -72,10 +72,10 @@ button {
     font-size: 16px;
     cursor: pointer;
 }
-button[data-theme="dark"] {
+#submit-link[data-theme="dark"] {
     background-color: var(--primary);
 }
-button:hover {
+#submit-link:hover {
     background-color: var(--secondary);
 }
 #shortened-link {
@@ -100,13 +100,11 @@ button:hover {
     display: flex;
     justify-content: space-around;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.50);
-    backdrop-filter: blur(10px);
     border-radius: 15px;
 }
 .header a {
     display: flex;
-    color: var(--inverse);
+    color: var(--text);
     text-decoration: none;
     font-size: 1.2em;
     margin: 0 5px;
@@ -123,7 +121,7 @@ button:hover {
 .header img {
     margin-right: 5px;
 }
-svg {
+svg#background {
     position: absolute;
     top: 0;
     left: 0;
@@ -133,14 +131,10 @@ svg {
     filter: blur(100px);
 }
 .Sa:link, .Sa:visited {
-        color: var(--primary);
+    color: var(--primary);
 }
 
-/* Error page stuff */
-pre {
-    font-size: 20px;
-    padding: 20px;
-    backdrop-filter: blur(10px);
-    background-color: rgba(94, 94, 94, 0.116);
-    border-radius: 15px;
+.container {
+    display: flex;
+    align-items: center;
 }
