@@ -1,0 +1,6 @@
+pre.service {
+    width: auto; /* or specify a specific width, e.g., 50% */
+    white-space: pre-wrap; /* This will allow the text to wrap */
+    overflow: auto;
+    font-size: 16px;
+}

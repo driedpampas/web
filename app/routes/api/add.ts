@@ -1,14 +1,14 @@
 import { Context } from 'hono';
-//import { getSignedCookie } from 'hono/cookie'
+import { getSignedCookie } from 'hono/cookie'
 import { createRoute } from 'honox/factory';
 //import { bearerAuth } from 'hono/bearer-auth'
 
 export const POST = createRoute(async (c: Context) => {
-    /*try {
-    const apiKey = await getSignedCookie(c, c.env.PASSWORD, 'keyID');
-    if (!apiKey) {return c.text('Unauthorized, please log in', 401)}
+    try {
+    const apiKey = await getSignedCookie(c, c.env.SECRET, 'keyID');
+    if (!!!apiKey) {return c.text('Unauthorized, please log in', 401)}
     } catch (e) {console.error(e)}
-    finally {console.log("User is Authorized");*/
+    finally {console.log("User is Authorized");
 
     let body = await c.req.json();
     if (c.req.header('Content-Type') !== 'application/json') {
@@ -36,7 +36,7 @@ export const POST = createRoute(async (c: Context) => {
 
     return new Response(JSON.stringify({ url: `https://next.dry.nl.eu.org/r/${id}` }), {status: 200, headers: { 'Content-Type': 'application/json' }});
     } catch (e) {console.error(e);}
-}/*}*/)
+}})
 
 export default createRoute(async (c) => {
     return new Response("docs are wip", {

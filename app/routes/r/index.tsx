@@ -6,7 +6,6 @@ const app = new Hono()
 
 app.get('/:link', async (c: Context) => {
     const linkId = c.req.param('link')
-    console.log(linkId);
 
     if (!linkId) {
         return c.render(
@@ -21,11 +20,11 @@ app.get('/:link', async (c: Context) => {
     
     if (results.length > 0) {
         let redir = results[0].src;
-        console.log(redir);
-        return c.html(`<html><head><meta http-equiv="refresh" content="0; URL='${redir}'" /></head></html>`);
+        return c.redirect(redir);
+        //return c.html(`<html><head><meta http-equiv="refresh" content="0; URL='${redir}'" /></head></html>`);
     } else return c.render(
       <BoxContainer color='rgba(196, 81, 81, 0.582)'>
-          <h1>Not found or not implemented.</h1>
+          <h1>This link was deleted or is invalid.</h1>
       </BoxContainer>,
       { title: 'Not found' }
   )

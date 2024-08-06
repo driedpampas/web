@@ -84,6 +84,8 @@ input {
     color: var(--text);
     list-style: none;
     padding: 0;
+    display: flex;
+    justify-content: center;
 }
 #shortened-link li {
     margin-bottom: 10px;
@@ -132,6 +134,7 @@ svg#background {
 }
 .Sa:link, .Sa:visited {
     color: var(--primary);
+    text-decoration: dotted;
 }
 
 .container {
