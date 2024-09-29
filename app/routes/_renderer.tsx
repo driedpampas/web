@@ -1,7 +1,7 @@
-import { jsxRenderer } from 'hono/jsx-renderer'
-import { Script } from 'honox/server'
+import { jsxRenderer } from "hono/jsx-renderer";
+import { Script } from "honox/server";
 
-let envar = !import.meta.env.PROD
+let envar = !import.meta.env.PROD;
 
 export default jsxRenderer(({ children, title, js, css, inlineScript }) => {
   return (
@@ -11,9 +11,12 @@ export default jsxRenderer(({ children, title, js, css, inlineScript }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
-        <link rel="stylesheet" href={`/static/styles/Shorten.css`} />
-        {js &&  <script src={`/static/js/${js || title}.js`} />}
-        {css ? <link rel="stylesheet" href={`/static/styles/${css}.css`} /> : ""}
+        {js && <script src={`/static/js/${js || title}.js`} />}
+        {css ? (
+          <link rel="stylesheet" href={`/static/styles/${css}.css`} />
+        ) : (
+          ""
+        )}
         <script src={`/static/ds/htmx.min.js`} />
         <script src={`/static/js/stopcf.js`} />
         <Script src="/app/client.ts" async />
@@ -21,8 +24,10 @@ export default jsxRenderer(({ children, title, js, css, inlineScript }) => {
           <script dangerouslySetInnerHTML={{ __html: inlineScript }} />
         )}
       </head>
-      <noscript>Javascript seems to be disabled. If this is an error, please report it.</noscript>  
+      <noscript>
+        Javascript seems to be disabled. If this is an error, please report it.
+      </noscript>
       <body>{children}</body>
     </html>
-  )
-})
+  );
+});
